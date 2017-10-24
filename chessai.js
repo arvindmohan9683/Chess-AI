@@ -8,6 +8,35 @@ var RNGesusMove = function(game) {
   return newGameMoves[RNG];
 };
 
+//Taking any available piece
+var BestPieceCapMove = function(game) {
+	var possibleMoves = game.ugly_moves();
+	var bestAvlMove = null;
+	var bestScore = -1;
+
+	for(var i=0;i<possibleMoves.length;i++) {
+		var curMove = possibleMoves[i];
+		game.ugly_move(curMove);
+		var curScore = - findScore(game.board());
+		game.undo();
+		if(curScore > bestScore) {
+			bestScore = curScore;
+			bestAvlMove = curMove;
+		}
+	}
+	return bestAvlMove;
+}
+
+
+
+/*
+NOTE:-  Traditional Piece Values used:-
+Pawn - 1
+Knight, Bishop - 3
+Rooks -5
+Queen - 9
+*/
+
 
 //Minimax Algorithm implementation
 
@@ -78,34 +107,6 @@ var minimaxChess = function(alpha, beta, height, MaxPlayerFlag, game) {
 
 
 };
-
-//Taking any available piece
-var BestPieceCapMove = function(game) {
-	var possibleMoves = game.ugly_moves();
-	var bestAvlMove = null;
-	var bestScore = -1;
-
-	for(var i=0;i<possibleMoves.length;i++) {
-		var curMove = possibleMoves[i];
-		game.ugly_move(curMove);
-		var curScore = - findScore(game.board());
-		game.undo();
-		if(curScore > bestScore) {
-			bestScore = curScore;
-			bestAvlMove = curMove;
-		}
-	}
-	return bestAvlMove;
-}
-
-
-//Move Evaluation Function
-/* Traditional Piece Values:-
-Pawn - 1
-Knight, Bishop - 3
-Rooks -5
-Queen - 9
-*/
 
 
 var findScore = function (board) {
