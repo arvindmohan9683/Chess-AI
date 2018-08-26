@@ -1,5 +1,5 @@
 var board, game = new Chess();
-
+var MaxHeightOfMinimaxTree = 5; //can be changed to whatever value needed
 
 //Random Moves
 var RNGesusMove = function(game) {
@@ -8,40 +8,9 @@ var RNGesusMove = function(game) {
   return newGameMoves[RNG];
 };
 
-//Taking any available piece
-var BestPieceCapMove = function(game) {
-	var possibleMoves = game.ugly_moves();
-	var bestAvlMove = null;
-	var bestScore = -1;
-
-	for(var i=0;i<possibleMoves.length;i++) {
-		var curMove = possibleMoves[i];
-		game.ugly_move(curMove);
-		var curScore = - findScore(game.board());
-		game.undo();
-		if(curScore > bestScore) {
-			bestScore = curScore;
-			bestAvlMove = curMove;
-		}
-	}
-	return bestAvlMove;
-}
-
-
-
-/*
-NOTE:-  Traditional Piece Values used:-
-Pawn - 1
-Knight, Bishop - 3
-Rooks -5
-Queen - 9
-*/
-
 
 //Minimax Algorithm implementation
 
-//change depth as required
-var minimaxDepth = 3;
 //First node call
 var iniMinimaxCall = function(height, MaxPlayerFlag, game) {
 
@@ -83,12 +52,12 @@ var minimaxChess = function(alpha, beta, height, MaxPlayerFlag, game) {
 	        alpha = Math.max(alpha, bestMove)
 	        if(beta <= alpha)
 	      	   return bestMove;
-	      
+
 		}
 		return bestMove;
 	}
 	else
-	{	
+	{
 		//MINIMIZE
 		var bestMove = +9999;
 		for( var i=0; i<possibleMoves.length; i++)
@@ -99,14 +68,42 @@ var minimaxChess = function(alpha, beta, height, MaxPlayerFlag, game) {
 			beta = Math.min(beta, bestMove)
 	        if(beta <= alpha)
 	      	   return bestMove;
-	      
+
 		}
-		return bestMove;	
+		return bestMove;
 	}
 
 
 
 };
+
+//Taking any available piece
+var BestPieceCapMove = function(game) {
+	var possibleMoves = game.ugly_moves();
+	var bestAvlMove = null;
+	var bestScore = -1;
+
+	for(var i=0;i<possibleMoves.length;i++) {
+		var curMove = possibleMoves[i];
+		game.ugly_move(curMove);
+		var curScore = - findScore(game.board());
+		game.undo();
+		if(curScore > bestScore) {
+			bestScore = curScore;
+			bestAvlMove = curMove;
+		}
+	}
+	return bestAvlMove;
+}
+
+
+//Move Evaluation Function
+/* Traditional Piece Values:-
+Pawn - 1
+Knight, Bishop - 3
+Rooks -5
+Queen - 9
+*/
 
 
 var findScore = function (board) {
@@ -203,52 +200,52 @@ var whiteKingBoard = [
 
 var blackKingBoard = convWhiteToBlackArray(whiteKingBoard);
 
-var getPieceScore = function (piece, color, x ,y) 
+var getPieceScore = function (piece, color, x ,y)
     {
 		   if(color === 'w')
-		   {	
+		   {
 		        if (piece.type === 'p') {
 		            return 1 + whitePawnBoard[y][x];
-		        } 
+		        }
 		        else if (piece.type === 'r') {
 		            return 5 + whiteRookBoard[y][x];
-		        } 
+		        }
 		        else if (piece.type === 'n') {
 		            return 3 + knightBoard[y][x];
-		        } 
+		        }
 		        else if (piece.type === 'b') {
 		            return 3 + whiteBishopBoard[y][x];
-		        } 
+		        }
 		        else if (piece.type === 'q') {
 		            return 9 + queenBoard[y][x];
-		        } 
+		        }
 		        else if (piece.type === 'k') {
 		            return 100 + whiteKingBoard[y][x];
 		        }
 		   }
 		   else
 		   	if(color === 'b')
-		   {	
+		   {
 		        if (piece.type === 'p') {
 		            return 1 + blackPawnBoard[y][x];
-		        } 
+		        }
 		        else if (piece.type === 'r') {
 		            return 5 + blackRookBoard[y][x];
-		        } 
+		        }
 		        else if (piece.type === 'n') {
 		            return 3 + knightBoard[y][x];
-		        } 
+		        }
 		        else if (piece.type === 'b') {
 		            return 3 + bishopEvalBlack[y][x];
-		        } 
+		        }
 		        else if (piece.type === 'q') {
 		            return 9 + queenBoard[y][x];
-		        } 
+		        }
 		        else if (piece.type === 'k') {
 		            return 100 + blackKingBoard[y][x];
 		        }
 		   }
-       
+
     };
 
 
@@ -283,7 +280,7 @@ var getBestMove = function(game) {
   	else
     alert('Checkmate');
   }
-  var bestMove = iniMinimaxCall(minimaxDepth,true,game);
+  var bestMove = iniMinimaxCall(MaxHeightOfMinimaxTree,true,game);
   return bestMove;
 };
 
